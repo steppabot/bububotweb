@@ -1,1 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bubu Bot</title>
+  <meta name="description" content="Bubu Bot — playful mini-games and utilities for your Discord server." />
+  <link rel="icon" href="bububotlogo.png" />
+  <style>
+    :root{
+      /* Bubu palette */
+      --bg:#07090b;
+      --panel:#0b0f15;
+      --fg:#f4f7fb;
+      --muted:#9fb0c8;
+      --pink:#f39ac6;
+      --blue:#a8e7ff;
+      --brand: linear-gradient(90deg, var(--pink), var(--blue));
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:radial-gradient(1200px 1200px at 50% 20%, #111827 0%, var(--bg) 50%);color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.55}
+    img{max-width:100%;height:auto}
+    a{color:var(--blue);text-decoration:none}
+    a:hover{text-decoration:underline}
 
+    .wrap{width:min(92vw,780px);margin:0 auto;padding:48px 20px}
+    .logo{width:min(420px,80vw);display:block;margin:0 auto 28px;filter:drop-shadow(0 8px 28px rgba(0,0,0,.45))}
+
+    .promo{background:var(--brand);color:#061017;font-weight:800;text-align:center;padding:12px 16px;border-radius:10px;margin-bottom:24px;font-size:1.1rem;letter-spacing:.3px}
+
+    .buttons{display:grid;grid-template-columns:1fr 1fr;gap:14px;justify-content:center;margin-bottom:22px}
+    a.btn{padding:14px 18px;border-radius:12px;font-weight:700;letter-spacing:.3px;text-align:center;transition:transform .16s,box-shadow .16s}
+    .btn-invite{background:var(--brand);color:#05151a;border:0}
+    .btn-invite:hover{transform:translateY(-1px);box-shadow:0 10px 30px rgba(168,231,255,.45)}
+    .btn-support{border:1px solid rgba(148,163,184,.35);color:var(--fg)}
+    .btn-support:hover{transform:translateY(-1px);border-color:var(--blue);box-shadow:0 8px 28px rgba(148,163,184,.35)}
+
+    .legal{margin-top:18px;font-size:12px;color:var(--muted);text-align:center}
+    .legal a{color:var(--muted);text-underline-offset:3px;text-decoration-thickness:1px}
+    .legal a:hover{color:var(--fg)}
+
+    h2{margin:40px 0 12px;font-size:1.8rem;text-align:center}
+    ol.steps{counter-reset:step;list-style:none;padding:0;margin:0 auto;max-width:640px}
+    ol.steps li{counter-increment:step;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:18px;margin-bottom:18px}
+    ol.steps li::before{content:counter(step);display:inline-flex;justify-content:center;align-items:center;width:28px;height:28px;border-radius:50%;background:var(--brand);color:#0b0f15;font-weight:700;margin-right:10px}
+    .step-head{font-weight:700;margin-bottom:6px}
+    .shots{margin-top:10px;border:1px solid rgba(255,255,255,.1);border-radius:10px;overflow:hidden}
+
+    ul.eligibility{margin:16px auto;max-width:640px;padding-left:18px}
+    ul.eligibility li{margin-bottom:8px}
+
+    @media (max-width:480px){
+      .buttons{grid-template-columns:1fr}
+      a.btn{width:100%}
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="promo">✨ Bring Bubu to your server — cute games, cozy vibes.</div>
+
+    <img class="logo" src="bububotlogo.png" alt="Bubu Bot logo" />
+
+    <div class="buttons">
+      <!-- TODO: replace CLIENT_ID -->
+      <a class="btn btn-invite" href="https://discord.com/oauth2/authorize?client_id=YOUR_BUBUBOT_CLIENT_ID&permissions=274877991936&scope=bot%20applications.commands" target="_blank" rel="noopener">INVITE BUBU BOT</a>
+      <a class="btn btn-support" href="https://discord.gg/pFQ7KHgz" target="_blank" rel="noopener">SUPPORT SERVER</a>
+    </div>
+
+    <div class="legal">
+      <a href="privacy.html">Privacy Policy</a> • <a href="terms.html">Terms of Service</a>
+    </div>
+
+    <!-- keep the same “how it works” section layout; swap copy to be Bubu-generic -->
+    <h2>What You Get</h2>
+    <ol class="steps">
+      <li>
+        <div class="step-head">Mini-games & Events</div>
+        Play lightweight, fast rounds designed for Discord chats.
+      </li>
+      <li>
+        <div class="step-head">Clean, Friendly UX</div>
+        Buttons, embeds, and simple commands anyone can use.
+      </li>
+      <li>
+        <div class="step-head">Config for Your Community</div>
+        Turn features on/off and set channels without hassle.
+      </li>
+      <li>
+        <div class="step-head">Actively Maintained</div>
+        Frequent tweaks and QoL updates based on feedback.
+      </li>
+    </ol>
+
+    <h2>Notes</h2>
+    <ul class="eligibility">
+      <li>Bubu Bot is not affiliated with Discord, Inc.</li>
+      <li>Some features may require specific permissions (set during invite).</li>
+      <li>See our <a href="privacy.html">Privacy Policy</a> for data details.</li>
+    </ul>
+  </main>
+</body>
+</html>
