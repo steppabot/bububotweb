@@ -1,22 +1,36 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="refresh" content="0; url=https://discord.com/application-directory/YOUR_APP_ID/store?sku_id=YOUR_SKU_ID">
-    <script>
-      const userAgent = navigator.userAgent.toLowerCase();
-      const inDiscord = userAgent.includes("discord");
-      const isMobile = /iphone|android|ipad/.test(userAgent);
+<head>
+  <title>Bubu Bot Premium</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: 'Inter', sans-serif; background:#0d1117; color:#fff; text-align:center; padding:2rem; }
+    button { background:#5865F2; color:white; border:none; padding:1rem 2rem; font-size:1.1rem; border-radius:8px; }
+  </style>
+  <script>
+    const isDiscord = navigator.userAgent.toLowerCase().includes("discord");
+    const isMobile = /iphone|android|ipad/.test(navigator.userAgent);
+    const storeURL = "https://discord.com/discovery/applications/1421896407140536401/store/1427920614915702806";
 
-      if (inDiscord && isMobile) {
-        // Try to open in native Discord app
-        window.location.href = "discord://";
-      } else {
-        // Regular web checkout fallback
-        window.location.href = "https://discord.com/application-directory/YOUR_APP_ID/store?sku_id=YOUR_SKU_ID";
-      }
-    </script>
-  </head>
-  <body>
-    <p>Redirecting to BubuBot Premium...</p>
-  </body>
+    if (!isDiscord) {
+      window.location.href = storeURL;
+    } else if (isMobile) {
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("msg").innerHTML =
+          "📱 To subscribe on mobile:<br><b>Tap the ••• menu → 'Open in Browser'</b><br><br>" +
+          "Then you'll be redirected to the official Discord checkout page.";
+      });
+    } else {
+      window.location.href = storeURL;
+    }
+  </script>
+</head>
+<body>
+  <h1>💎 Bubu Bot Premium</h1>
+  <p id="msg">Redirecting to Discord checkout...</p>
+  <br>
+  <a href="https://discord.com/discovery/applications/1421896407140536401/store/1427920614915702806">
+    <button>Open in Browser</button>
+  </a>
+</body>
 </html>
