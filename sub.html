@@ -9,7 +9,7 @@
   <style>
     :root{
       --bg:#323339; --card:#393a41; --text:#ffffff; --muted:#b7bbc6;
-      --line:#4a4c55; --btn:#5865F2; --btnText:#fff; --ghost:#2f3136; --ghostText:#d7dbe6;
+      --line:#4a4c55; --btn:#5865F2; --btnText:#fff;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -18,9 +18,19 @@
       font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif;
       display:flex; align-items:center; justify-content:center; padding:24px;
     }
-    .card{width:min(760px,100%); background:var(--card); border-radius:16px; box-shadow:0 8px 30px rgba(0,0,0,.35); padding:24px;}
+    .card{
+      width:min(760px,100%);
+      background:var(--card);
+      border-radius:16px;
+      box-shadow:0 8px 30px rgba(0,0,0,.35);
+      padding:24px;
+    }
     .header{display:flex; align-items:center; gap:12px; margin-bottom:8px;}
-    .diamond{width:28px; height:28px; display:grid; place-items:center; background:linear-gradient(180deg,#8dd6ff,#c9e7ff); border-radius:8px; color:#0b1b2a; font-weight:700;}
+    .diamond{
+      width:28px; height:28px; display:grid; place-items:center;
+      background:linear-gradient(180deg,#8dd6ff,#c9e7ff);
+      border-radius:8px; color:#0b1b2a; font-weight:700;
+    }
     h1{font-size:22px; margin:0}
     h2{font-size:18px; margin:8px 0 4px}
     .muted{color:var(--muted)}
@@ -28,23 +38,23 @@
     .list{display:grid; gap:10px; margin:10px 0 0}
     .row{display:flex; gap:10px; align-items:flex-start}
     .row b{color:#fff}
-    .sectionTitle{display:inline-block; padding:4px 10px; border-radius:999px; background:#2b2d33; color:#cfd3de; font-size:12px; margin:6px 0 10px}
-    .cta{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
-    a.btn,button.btn{
-      border:0; border-radius:8px; padding:12px 16px; font-weight:700; cursor:pointer;
-      display:inline-flex; align-items:center; gap:10px; text-decoration:none;
+    .cta{margin-top:20px; display:flex; justify-content:center}
+    a.btn{
+      border:0; border-radius:8px; padding:14px 22px; font-weight:700;
+      background:var(--btn); color:var(--btnText); text-decoration:none;
+      display:inline-flex; align-items:center; gap:10px; font-size:16px;
     }
-    .btn.primary{background:var(--btn); color:var(--btnText)}
-    .btn.ghost{background:var(--ghost); color:var(--ghostText)}
-    .hint{font-size:14px; color:var(--muted); margin-top:8px}
-    .hidden{display:none}
-    .logo{filter:invert(1)}
+    .logo{
+      width:22px; height:22px; filter:invert(1); display:inline-block;
+    }
+    .footer{margin-top:20px; text-align:center; color:var(--muted); font-size:14px;}
   </style>
 </head>
 <body>
   <div class="card">
     <div class="header">
-      <div class="diamond">◆</div><h1>Bubu Bot Premium</h1>
+      <div class="diamond">◆</div>
+      <h1>Bubu Bot Premium</h1>
     </div>
     <h2>Get the Full Bubu Experience</h2>
     <div class="muted">Unlimited fun • Exclusive rewards • Rare collectibles</div>
@@ -62,75 +72,23 @@
 
     <div class="divider"></div>
 
-    <!-- MOBILE SECTION -->
-    <div>
-      <span class="sectionTitle">Mobile users</span>
-      <div class="cta">
-        <!-- OAuth → back to this page → auto-redirect to SKU -->
-        <a id="loginBtn" class="btn primary" href="#">
-          <img class="logo" src="https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/discord.svg" width="20" height="20" alt="Discord">
-          Login with Discord to Subscribe
-        </a>
-      </div>
-      <div class="hint">If you’re inside the Discord app, tap <b>•••</b> → <b>Open in Browser</b> first.</div>
+    <div class="cta">
+      <a id="subscribeBtn" class="btn" href="#">
+        <img class="logo" src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/discord.svg" alt="Discord">
+        Subscribe via Discord
+      </a>
     </div>
 
-    <div class="divider"></div>
-
-    <!-- DESKTOP SECTION -->
-    <div>
-      <span class="sectionTitle">Desktop users</span>
-      <div class="cta">
-        <!-- Reliable path: opens the store modal in the browser -->
-        <a id="openWeb" class="btn primary" href="#" rel="noopener">Open Premium in Browser</a>
-
-        <!-- Optional: try to open the Discord app (no official deep link to the SKU; this just opens the client) -->
-        <a id="openApp" class="btn ghost" href="discord://" rel="noopener">Open Discord App</a>
-      </div>
-      <div class="hint">The app button opens Discord, but it can’t deep-link straight to the SKU. Use the browser button if needed.</div>
+    <div class="footer">
+      You’ll complete your subscription securely through Discord.
     </div>
-
-    <div class="divider"></div>
-    <div class="hint" id="status"></div>
   </div>
 
   <script>
-    // ====== CONFIG ======
     const APP_ID = "1421896407140536401";
     const SKU_ID = "1427920614915702806";
-
-    // Best public route for the SKU page (works on desktop & mobile browsers)
     const STORE_URL = `https://discord.com/discovery/applications/${APP_ID}/store/${SKU_ID}`;
-
-    // OAuth login → redirect back here → we forward to the SKU page
-    const REDIRECT_URI = "https://bububot.dev/sub.html";
-    const OAUTH_URL =
-      `https://discord.com/oauth2/authorize?client_id=${APP_ID}`
-      + `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`
-      + `&response_type=code&scope=identify&state=bubu_premium`;
-
-    // ====== WIRE BUTTONS ======
-    document.getElementById("loginBtn").href = OAUTH_URL;
-    document.getElementById("openWeb").href = STORE_URL;
-
-    // After OAuth, Discord returns ?code=... — if we see it, go to the SKU now.
-    const p = new URLSearchParams(location.search);
-    const code = p.get("code");
-    const status = document.getElementById("status");
-
-    if (code) {
-      status.textContent = "Logged in. Redirecting to Discord checkout…";
-      setTimeout(() => { window.location.replace(STORE_URL); }, 800);
-    } else {
-      status.textContent = "Choose the option above that matches your device.";
-    }
-
-    // Optional: surface the desktop section first when on desktop
-    const ua = navigator.userAgent.toLowerCase();
-    const isMobile = /iphone|ipad|ipod|android/.test(ua);
-    if (!isMobile) {
-      // no-op; layout already shows both sections
-    }
+    document.getElementById("subscribeBtn").href = STORE_URL;
   </script>
 </body>
 </html>
