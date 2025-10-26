@@ -1,13 +1,22 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
   <head>
-    <meta http-equiv="refresh" content="0; url=https://discord.com/application-directory/1421896407140536401/store?sku_id=1427920614915702806">
+    <meta http-equiv="refresh" content="0; url=https://discord.com/application-directory/YOUR_APP_ID/store?sku_id=YOUR_SKU_ID">
     <script>
-      // Fallback if the meta refresh fails
-      window.location.replace("https://discord.com/application-directory/1421896407140536401/store?sku_id=1427920614915702806");
+      const userAgent = navigator.userAgent.toLowerCase();
+      const inDiscord = userAgent.includes("discord");
+      const isMobile = /iphone|android|ipad/.test(userAgent);
+
+      if (inDiscord && isMobile) {
+        // Try to open in native Discord app
+        window.location.href = "discord://";
+      } else {
+        // Regular web checkout fallback
+        window.location.href = "https://discord.com/application-directory/YOUR_APP_ID/store?sku_id=YOUR_SKU_ID";
+      }
     </script>
   </head>
-  <body style="background:#0b0f15;color:#fff;font-family:sans-serif;text-align:center;padding-top:30vh;">
-    <h2>Redirecting you to Bubu Bot Premium…</h2>
+  <body>
+    <p>Redirecting to BubuBot Premium...</p>
   </body>
 </html>
