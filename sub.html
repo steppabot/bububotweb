@@ -8,12 +8,12 @@
   <meta name="theme-color" content="#5865F2">
   <style>
     :root{
-      --bg:#323339;        /* page background */
-      --card:#393a41;      /* container */
-      --text:#ffffff;      /* primary text */
-      --muted:#b7bbc6;     /* secondary text */
-      --line:#4a4c55;      /* dividers */
-      --accent:#5865F2;    /* Discord blurple */
+      --bg:#323339;
+      --card:#393a41;
+      --text:#ffffff;
+      --muted:#b7bbc6;
+      --line:#4a4c55;
+      --accent:#5865F2;
       --btn:#5865F2;
       --btnText:#fff;
       --btnGhost:#2f3136;
@@ -36,14 +36,11 @@
       box-shadow:0 8px 30px rgba(0,0,0,.35);
       padding:24px;
     }
-    .header{
-      display:flex; align-items:center; gap:12px; margin-bottom:8px;
-    }
+    .header{display:flex; align-items:center; gap:12px; margin-bottom:8px;}
     .diamond{
       width:28px; height:28px; display:inline-grid; place-items:center;
       background:linear-gradient(180deg,#8dd6ff,#c9e7ff);
-      border-radius:8px;
-      color:#0b1b2a; font-weight:700;
+      border-radius:8px; color:#0b1b2a; font-weight:700;
     }
     h1{font-size:22px; margin:0}
     h2{font-size:18px; margin:8px 0 4px}
@@ -52,156 +49,121 @@
     .list{display:grid; gap:10px; margin:10px 0 0}
     .row{display:flex; gap:10px; align-items:flex-start}
     .row b{color:#fff}
-    .cta{
-      margin-top:16px; display:flex; gap:10px; flex-wrap:wrap
-    }
+    .cta{margin-top:16px; display:flex; gap:10px; flex-wrap:wrap}
     .btn{
       appearance:none; border:0; border-radius:8px;
       padding:12px 16px; font-weight:600; cursor:pointer;
+      display:flex; align-items:center; gap:8px; text-decoration:none; justify-content:center;
     }
     .btn.primary{background:var(--btn); color:var(--btnText)}
     .btn.ghost{background:var(--btnGhost); color:var(--btnGhostText)}
-    .footer{
-      margin-top:12px; color:var(--muted); font-size:14px
-    }
-    code.copy{
-      display:block; width:100%;
-      background:#2a2c32; color:#e6e8ee; border:1px solid var(--line);
-      border-radius:8px; padding:10px 12px; word-break:break-all; margin-top:8px;
-      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px;
-    }
+    .footer{margin-top:12px; color:var(--muted); font-size:14px}
     .pill{display:inline-block; background:var(--pill); padding:2px 8px; border-radius:999px; font-size:12px; color:#cfd3de}
     .hidden{display:none}
+    code.copy{
+      display:block; width:100%; background:#2a2c32; color:#e6e8ee;
+      border:1px solid var(--line); border-radius:8px; padding:10px 12px;
+      word-break:break-all; margin-top:8px;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px;
+    }
   </style>
 </head>
 <body>
-  <div class="card" role="region" aria-label="Bubu Bot Premium">
+  <div class="card">
     <div class="header">
       <div class="diamond">◆</div>
-      <h1> Bubu Bot Premium</h1>
+      <h1>Bubu Bot Premium</h1>
     </div>
     <h2>Get the Full Bubu Experience</h2>
     <div class="muted">Unlimited fun • Exclusive rewards • Rare collectibles</div>
 
     <div class="divider"></div>
-
     <div class="muted">Here’s what Premium includes:</div>
-    <div class="list" aria-label="Premium perks">
+
+    <div class="list">
       <div class="row">🎮 <div><b>Unlimited Gameplay</b> — Play all BubuBot games with no hourly or daily limits.</div></div>
-      <div class="row">💰 <div><b>Bigger Multipliers & Rewards</b> — Higher payouts and bonus multipliers across every game.</div></div>
-      <div class="row">👜 <div><b>Rare Accessories & Collectibles</b> — Unlock exclusive premium-only Bubus and outfits.</div></div>
+      <div class="row">💰 <div><b>Bigger Multipliers & Rewards</b> — Enjoy higher payouts and bonus multipliers.</div></div>
+      <div class="row">👜 <div><b>Rare Accessories & Collectibles</b> — Unlock premium-only Bubus and outfits.</div></div>
       <div class="row">🎁 <div><b>Future Giveaways</b> — Automatic entry into monthly giveaways with real prizes.</div></div>
-      <div class="row">🚀 <div><b>Early Access to New Games</b> — Play new modes and seasonal events before release.</div></div>
+      <div class="row">🚀 <div><b>Early Access to New Games</b> — Play new modes and seasonal events early.</div></div>
     </div>
 
     <div class="divider"></div>
 
-    <!-- In-Discord instructions -->
+    <!-- Mobile instructions -->
     <div id="inDiscord" class="muted hidden">
       <p class="pill">Mobile Discord detected</p>
       <p><b>To subscribe on mobile:</b><br>
-      Tap the <b>•••</b> menu in the top-right and choose <b>Open in Browser</b>.<br>
-      Then this page will automatically take you to the official Discord checkout.</p>
-
-      <div class="cta">
-        <button id="copy" class="btn ghost" type="button">Copy Link</button>
-        <a id="openRaw" class="btn ghost" href="#" rel="noopener">Open Checkout (may be blocked)</a>
-      </div>
-
-      <code id="linkText" class="copy"></code>
+      Tap the <b>•••</b> menu in the top-right → <b>Open in Browser</b>.<br>
+      Then log in and subscribe using your browser.</p>
     </div>
 
-    <!-- Auto-redirect state -->
+    <!-- OAuth login -->
+    <div id="loginArea" class="muted hidden">
+      <p>Login with Discord to start your Premium subscription:</p>
+      <div class="cta">
+        <a id="loginBtn" class="btn primary" href="#">
+          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/discord.svg" width="20" height="20" alt="Discord">
+          Login with Discord
+        </a>
+      </div>
+    </div>
+
+    <!-- Redirecting -->
     <div id="redirecting" class="muted hidden">
-      <p>Redirecting you to Discord checkout…</p>
+      <p>Redirecting you to the official checkout…</p>
       <div class="cta">
-        <a id="openNow" class="btn primary" href="#" rel="noopener">Open Now</a>
-        <button id="stay" class="btn ghost" type="button">Stay Here</button>
-      </div>
-    </div>
-
-    <!-- Fallback idle state -->
-    <div id="idle" class="muted hidden">
-      <div class="cta">
-        <a id="openIdle" class="btn primary" href="#" rel="noopener">Get Bubu Bot Premium</a>
+        <a id="openNow" class="btn primary" href="#">Open Now</a>
       </div>
     </div>
 
     <div class="divider"></div>
-    <div class="footer" id="footerNote"> </div>
+    <div class="footer" id="footerNote"></div>
   </div>
 
   <script>
-    // ==== CONFIG ====
+    // CONFIG
     const APP_ID = "1421896407140536401";
     const SKU_ID = "1427920614915702806";
-    // Use the Discovery page — best behavior in real browsers.
     const STORE_URL = `https://discord.com/discovery/applications/${APP_ID}/store/${SKU_ID}`;
+    const REDIRECT_URI = "https://bububot.dev/sub.html";
+    const OAUTH_URL =
+      `https://discord.com/oauth2/authorize?client_id=${APP_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify&state=bubu_premium`;
 
-    // ==== DETECTION ====
-    const ua = navigator.userAgent || "";
-    const ual = ua.toLowerCase();
-    const isDiscord = ual.includes("discord");
-    const isIOS = /iphone|ipad|ipod/.test(ual);
-    const isAndroid = /android/.test(ual);
+    // DETECT environment
+    const ua = navigator.userAgent.toLowerCase();
+    const isDiscord = ua.includes("discord");
+    const isIOS = /iphone|ipad|ipod/.test(ua);
+    const isAndroid = /android/.test(ua);
     const isMobile = isIOS || isAndroid;
     const inDiscordMobile = isDiscord && isMobile;
 
-    // Elements
     const $ = (s)=>document.querySelector(s);
-    const inDiscord = $("#inDiscord");
+    const inDiscordEl = $("#inDiscord");
+    const loginArea = $("#loginArea");
     const redirecting = $("#redirecting");
-    const idle = $("#idle");
-    const linkText = $("#linkText");
-    const footerNote = $("#footerNote");
+    const footer = $("#footerNote");
 
-    // Wire links
-    $("#openRaw").href = STORE_URL;
+    $("#loginBtn").href = OAUTH_URL;
     $("#openNow").href = STORE_URL;
-    $("#openIdle").href = STORE_URL;
 
-    // Copy button
-    $("#copy").addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(STORE_URL);
-        $("#copy").textContent = "Copied!";
-        setTimeout(()=>$("#copy").textContent = "Copy Link", 1800);
-      } catch { /* ignore */ }
-    });
-
-    // "Stay Here" cancels auto redirect timer
-    let redirectTimer = null;
-    $("#stay").addEventListener("click", () => {
-      if (redirectTimer) { clearTimeout(redirectTimer); redirectTimer = null; }
-      $("#stay").textContent = "Auto-redirect canceled";
-      $("#stay").disabled = true;
-    });
-
-    // ==== FLOW ====
-    linkText.textContent = STORE_URL;
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
 
     if (inDiscordMobile) {
-      // Inside Discord mobile webview: show instructions.
-      inDiscord.classList.remove("hidden");
-      footerNote.textContent = "Tip: If nothing happens, copy the link above and paste it into Safari/Chrome.";
-    } else {
-      // Real browser (desktop or mobile): redirect automatically (with a visible fallback).
+      // Inside Discord mobile app → show open-in-browser instructions
+      inDiscordEl.classList.remove("hidden");
+      footer.textContent = "Tip: Tap the ••• menu → Open in Browser to continue.";
+    } else if (code) {
+      // User came back from OAuth login
       redirecting.classList.remove("hidden");
-      footerNote.textContent = "If you weren’t redirected, click Open Now.";
-      redirectTimer = setTimeout(() => {
-        // Use replace so back button returns to the previous app/web page
-        window.location.replace(STORE_URL);
-      }, 600);
+      footer.textContent = "Logged in. Redirecting to checkout…";
+      setTimeout(() => window.location.replace(STORE_URL), 1000);
+    } else {
+      // Regular visitor → show login button
+      loginArea.classList.remove("hidden");
+      footer.textContent = "Login securely with Discord before subscribing.";
     }
-
-    // Absolute fallback if JS is blocked (handled by the buttons/links).
   </script>
-
-  <noscript>
-    <style>#redirecting,.hidden{display:none!important}</style>
-    <div class="muted" style="margin-top:10px">
-      JavaScript is required to redirect you. Please click “Get Bubu Bot Premium”.
-    </div>
-  </noscript>
 </body>
 </html>
