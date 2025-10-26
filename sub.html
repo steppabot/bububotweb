@@ -26,10 +26,9 @@
       padding:24px;
     }
     .header{display:flex; align-items:center; gap:12px; margin-bottom:8px;}
-    .diamond{
-      width:28px; height:28px; display:grid; place-items:center;
-      background:linear-gradient(180deg,#8dd6ff,#c9e7ff);
-      border-radius:8px; color:#0b1b2a; font-weight:700;
+    .bubu-logo{
+      width:30px; height:30px; border-radius:6px; object-fit:contain;
+      background:#2b2d33; padding:2px; margin-left:2px;
     }
     h1{font-size:22px; margin:0}
     h2{font-size:18px; margin:8px 0 4px}
@@ -38,24 +37,25 @@
     .list{display:grid; gap:10px; margin:10px 0 0}
     .row{display:flex; gap:10px; align-items:flex-start}
     .row b{color:#fff}
-    .cta{margin-top:20px; display:flex; justify-content:center}
+    .cta{margin-top:20px; display:flex; justify-content:center; flex-wrap:wrap; gap:10px}
     a.btn{
-      border:0; border-radius:8px; padding:14px 22px; font-weight:700;
+      border:0; border-radius:12px; padding:14px 22px; font-weight:700;
       background:var(--btn); color:var(--btnText); text-decoration:none;
       display:inline-flex; align-items:center; gap:10px; font-size:16px;
     }
-    .logo{
-      width:22px; height:22px; filter:invert(1); display:inline-block;
-    }
-    .bubu-logo {
-      width: 30px;
-      height: 30px;
-      border-radius: 6px;
-      object-fit: contain;
-      margin-left: 2px;
-      padding: 2px;
-    }
+    .logo{width:22px; height:22px; filter:invert(1)}
     .footer{margin-top:20px; text-align:center; color:var(--muted); font-size:14px;}
+    .note{margin-top:10px; font-size:14px; color:var(--muted); text-align:center}
+    .hidden{display:none}
+    .copy{
+      display:block; width:100%; background:#2a2c32; color:#e6e8ee;
+      border:1px solid var(--line); border-radius:8px; padding:10px 12px;
+      word-break:break-all; font:13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+    .small-actions{display:flex; gap:10px; justify-content:center; margin-top:10px}
+    button.minibtn{
+      background:#2f3136; color:#d7dbe6; border:0; border-radius:8px; padding:8px 12px; cursor:pointer;
+    }
   </style>
 </head>
 <body>
@@ -80,6 +80,7 @@
 
     <div class="divider"></div>
 
+    <!-- Single CTA: OAuth first, then SKU -->
     <div class="cta">
       <a id="subscribeBtn" class="btn" href="#">
         <img class="logo" src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/discord.svg" alt="Discord">
@@ -87,16 +88,87 @@
       </a>
     </div>
 
-    <div class="footer">
-      You’ll complete your subscription securely through Discord.
+    <!-- In-app mobile fallback -->
+    <div id="inAppNote" class="note hidden">
+      If you’re inside the Discord app, tap <b>•••</b> → <b>Open in Browser</b> and try again.
     </div>
+
+    <!-- After-login helper UI when in-app browser blocks the SKU -->
+    <div id="openBrowserBlock" class="hidden">
+      <div class="note">Logged in. If the product doesn’t open here, use your browser:</div>
+      <code id="skuLink" class="copy"></code>
+      <div class="small-actions">
+        <button id="copySku" class="minibtn">Copy Link</button>
+        <a id="openSku" class="minibtn" href="#" rel="noopener">Open in Browser</a>
+      </div>
+    </div>
+
+    <div class="footer">You’ll complete your subscription securely through Discord.</div>
   </div>
 
   <script>
+    // ====== CONFIG ======
     const APP_ID = "1421896407140536401";
     const SKU_ID = "1427920614915702806";
+    const REDIRECT_URI = "https://bububot.dev/sub.html";   // must be in OAuth Redirects
     const STORE_URL = `https://discord.com/discovery/applications/${APP_ID}/store/${SKU_ID}`;
-    document.getElementById("subscribeBtn").href = STORE_URL;
+
+    // OAuth (identify only) so the user is logged in before we hit the store
+    const OAUTH_URL = `https://discord.com/oauth2/authorize`
+      + `?client_id=${APP_ID}`
+      + `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`
+      + `&response_type=code`
+      + `&scope=identify`
+      + `&state=bubu_premium`
+      + `&prompt=consent`; // show login/consent reliably
+
+    // ====== ENV DETECTION ======
+    const ua = navigator.userAgent.toLowerCase();
+    const inDiscordApp = ua.includes("discord");
+    const isMobile = /iphone|ipad|ipod|android/.test(ua);
+    const inDiscordMobile = inDiscordApp && isMobile;
+
+    // ====== WIRE CTA ======
+    const subBtn = document.getElementById("subscribeBtn");
+    subBtn.href = OAUTH_URL;
+
+    if (inDiscordMobile) {
+      // Let users know they may need to break out of the in-app webview
+      document.getElementById("inAppNote").classList.remove("hidden");
+    }
+
+    // ====== POST-OAUTH HANDLING ======
+    const params = new URLSearchParams(location.search);
+    const code = params.get("code");
+    const error = params.get("error");
+
+    // Helper UI elements for the “open in browser” fallback
+    const openBlock = document.getElementById("openBrowserBlock");
+    const skuLink = document.getElementById("skuLink");
+    const openSku = document.getElementById("openSku");
+    const copySku = document.getElementById("copySku");
+
+    if (error) {
+      // User canceled or something went wrong → do nothing (button remains)
+      console.log("OAuth error:", error);
+    } else if (code) {
+      // We are authenticated. If we’re NOT inside Discord’s in-app browser, go straight to the SKU.
+      if (!inDiscordMobile) {
+        window.location.replace(STORE_URL);
+      } else {
+        // In-app browser often breaks the store page. Show “open in browser” helpers.
+        openBlock.classList.remove("hidden");
+        skuLink.textContent = STORE_URL;
+        openSku.href = STORE_URL;
+        copySku.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(STORE_URL);
+            copySku.textContent = "Copied!";
+            setTimeout(() => copySku.textContent = "Copy Link", 1400);
+          } catch {}
+        });
+      }
+    }
   </script>
 </body>
 </html>
