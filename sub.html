@@ -90,40 +90,31 @@
 
     <div class="divider"></div>
 
-    <!-- Mobile instructions -->
-    <div id="inDiscord" class="muted hidden">
-      <p class="pill">Mobile Discord detected</p>
-      <p><b>To subscribe on mobile:</b><br>
-      Tap the <b>•••</b> menu in the top-right → <b>Open in Browser</b>.<br>
-      Then log in and subscribe using your browser.</p>
-    </div>
-
-    <!-- OAuth login -->
-    <div id="loginArea" class="muted hidden">
-      <p>Login with Discord to start your Premium subscription:</p>
-        <div class="cta">
-          <a id="loginBtn" class="btn primary" href="#">
-            <img src="https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/discord.svg"
-                 width="20" height="20" alt="Discord"
-                 style="filter: invert(1);">
-            Login with Discord
-          </a>
-
-          <a id="openInApp" href="discord://-/oauth2/authorize?client_id=1421896407140536401&response_type=code&scope=identify&redirect_uri=https%3A%2F%2Fbububot.dev%2Fsub.html"
-           class="btn ghost hidden">Open in Discord App</a>
-
-          <script>
-            const isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
-            if (isMobile) document.getElementById("openInApp").classList.remove("hidden");
-          </script>
-        </div>
-    </div>
-
-    <!-- Redirecting -->
-    <div id="redirecting" class="muted hidden">
-      <p>Redirecting you to the official checkout…</p>
+    <!-- MOBILE FLOW -->
+    <div id="mobileFlow" class="muted hidden">
+      <p class="pill">Mobile users</p>
+      <h2>For Mobile Users — Click “Login with Discord” below</h2>
+      <p>After login, you’ll return here and we’ll send you to the official checkout.</p>
       <div class="cta">
-        <a id="openNow" class="btn primary" href="#">Open Now</a>
+        <a id="loginBtn" class="btn primary" href="#">
+          <img src="https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/discord.svg"
+               width="20" height="20" alt="Discord" style="filter: invert(1);">
+          Login with Discord
+        </a>
+      </div>
+      <code class="copy">If stuck in Discord’s in-app browser: tap <b>⋯</b> → <b>Open in Browser</b>, then try again.</code>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- DESKTOP FLOW -->
+    <div id="desktopFlow" class="muted hidden">
+      <p class="pill">Desktop users</p>
+      <h2>For Desktop Users — Click “Open with Discord” below</h2>
+      <p>This opens the Premium product in your Discord client. Use the browser fallback if needed.</p>
+      <div class="cta">
+        <a id="openNow" class="btn primary" href="#">Open with Discord</a>
+        <a id="openWeb" class="btn ghost" href="#" target="_blank" rel="noopener">Open in Browser (fallback)</a>
       </div>
     </div>
 
@@ -132,15 +123,21 @@
   </div>
 
   <script>
-    // CONFIG
+    // ========= CONFIG =========
     const APP_ID = "1421896407140536401";
     const SKU_ID = "1427920614915702806";
-    const STORE_URL = `https://discord.com/discovery/applications/${APP_ID}/store/${SKU_ID}`;
+
+    // Deep link to your SKU in the App Directory store
+    const STORE_URL = `https://discord.com/application-directory/${APP_ID}/store/${SKU_ID}`;
+
+    // OAuth bounce (mobile flow)
     const REDIRECT_URI = "https://bububot.dev/sub.html";
     const OAUTH_URL =
-      `https://discord.com/oauth2/authorize?client_id=${APP_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify&state=bubu_premium`;
+      `https://discord.com/oauth2/authorize?client_id=${APP_ID}` +
+      `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
+      `&response_type=code&scope=identify&state=bubu_premium`;
 
-    // DETECT environment
+    // ========= DETECT =========
     const ua = navigator.userAgent.toLowerCase();
     const isDiscord = ua.includes("discord");
     const isIOS = /iphone|ipad|ipod/.test(ua);
@@ -148,31 +145,39 @@
     const isMobile = isIOS || isAndroid;
     const inDiscordMobile = isDiscord && isMobile;
 
+    // ========= DOM =========
     const $ = (s)=>document.querySelector(s);
-    const inDiscordEl = $("#inDiscord");
-    const loginArea = $("#loginArea");
-    const redirecting = $("#redirecting");
-    const footer = $("#footerNote");
+    const mobileFlow  = $("#mobileFlow");
+    const desktopFlow = $("#desktopFlow");
+    const footer      = $("#footerNote");
 
-    $("#loginBtn").href = OAUTH_URL;
-    $("#openNow").href = STORE_URL;
+    // Wire URLs
+    const loginBtn = $("#loginBtn");
+    const openNow  = $("#openNow");
+    const openWeb  = $("#openWeb");
 
+    if (loginBtn) loginBtn.href = OAUTH_URL;
+    if (openNow)  openNow.href  = STORE_URL; // usually opens Discord client on desktop
+    if (openWeb)  openWeb.href  = STORE_URL; // safe browser fallback
+
+    // ========= LOGIC =========
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
 
-    if (inDiscordMobile) {
-      // Inside Discord mobile app → show open-in-browser instructions
-      inDiscordEl.classList.remove("hidden");
-      footer.textContent = "Tip: Tap the ••• menu → Open in Browser to continue.";
-    } else if (code) {
-      // User came back from OAuth login
-      redirecting.classList.remove("hidden");
-      footer.textContent = "Logged in. Redirecting to checkout…";
-      setTimeout(() => window.location.replace(STORE_URL), 1000);
+    if (isMobile) {
+      // MOBILE: show login → on return, redirect to product
+      mobileFlow.classList.remove("hidden");
+      footer.textContent = inDiscordMobile
+        ? "Tip: Tap ⋯ → Open in Browser if the login page won’t load correctly inside Discord."
+        : "Login with Discord, then we’ll redirect you to checkout.";
+      if (code) {
+        footer.textContent = "Logged in. Redirecting to checkout…";
+        setTimeout(() => window.location.replace(STORE_URL), 600);
+      }
     } else {
-      // Regular visitor → show login button
-      loginArea.classList.remove("hidden");
-      footer.textContent = "Login securely with Discord before subscribing.";
+      // DESKTOP: go straight to store
+      desktopFlow.classList.remove("hidden");
+      footer.textContent = "Click “Open with Discord”. If the client doesn’t open, use the browser fallback.";
     }
   </script>
 </body>
