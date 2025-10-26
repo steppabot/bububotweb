@@ -108,6 +108,14 @@
                  style="filter: invert(1);">
             Login with Discord
           </a>
+
+          <a id="openInApp" href="discord://-/oauth2/authorize?client_id=1421896407140536401&response_type=code&scope=identify&redirect_uri=https%3A%2F%2Fbububot.dev%2Fsub.html"
+           class="btn ghost hidden">Open in Discord App</a>
+
+          <script>
+            const isMobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
+            if (isMobile) document.getElementById("openInApp").classList.remove("hidden");
+          </script>
         </div>
     </div>
 
