@@ -2,20 +2,9 @@
 <html>
   <head>
     <title>Open in Browser</title>
-    <script>
-      // Try to break out of Discord's webview
-      if (navigator.userAgent.includes("Discord")) {
-        // This works only if the user has a system browser set
-        window.open("https://discord.com/application-directory/1421896407140536401/store?sku_id=1427920614915702806", "_blank");
-        document.body.innerHTML = `
-          <p>Please open this page in your system browser to continue your purchase.<br><br>
-          Tap the ••• menu → "Open in Browser"</p>`;
-      } else {
-        window.location.href = "https://discord.com/application-directory/YOUR_APP_ID/store?sku_id=YOUR_SKU_ID";
-      }
-    </script>
+  
   </head>
   <body>
-    <p>Redirecting…</p>
+    <p>Click the ... To open in an external browser!</p>
   </body>
 </html>
